@@ -43,10 +43,6 @@ def plot_bars(df: pd.DataFrame,
 
     return ax
 
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 def plot_grid_boxplot(df: pd.DataFrame,
                       num_features: list,
                       target: str,
