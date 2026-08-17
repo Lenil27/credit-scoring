@@ -1,0 +1,29 @@
+# Полный список числовых признаков из твоего датасета
+numeric_features:
+  - RevolvingUtilizationOfUnsecuredLines
+  - age
+  - NumberOfTime30-59DaysPastDueNotWorse
+  - DebtRatio
+  - MonthlyIncome
+  - NumberOfOpenCreditLinesAndLoans
+  - NumberOfTimes90DaysLate
+  - NumberRealEstateLoansOrLines
+  - NumberOfTime60-89DaysPastDueNotWorse
+  - NumberOfDependents
+
+# Категориальные признаки (если есть, можно оставить пустым списком [])
+categorical_features: []
+
+# Индивидуальные стратегии для специфических признаков: [scaler, imputer, outlier]
+numeric_config:
+  RevolvingUtilizationOfUnsecuredLines: ['standard', 'median', 'clip_quantile']
+  DebtRatio: ['standard', 'median', 'clip_iqr']
+  MonthlyIncome: ['robust', 'median', 'none']
+  
+  NumberOfTime30-59DaysPastDueNotWorse: ['standard', 'median', 'none']
+  NumberOfTimes90DaysLate: ['standard', 'median', 'none']
+  NumberOfTime60-89DaysPastDueNotWorse: ['standard', 'median', 'none']
+categorical_config: {}
+
+default_num_strategy: ['standard', 'median', 'clip_quantile']
+default_cat_strategy: ['ohe', 'most_frequent', null]
