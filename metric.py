@@ -110,27 +110,33 @@ class MetricsCalculator():
         plt.tight_layout()
         plt.show()
 
-    @staticmethod
-    def plot_comparison_curves(models_dict, X_test, y_test):
+    staticmethod
+    def plot_comparison_curves(models_dict, X_full, X_cat, y):
         """
-        Строит совмещенные ROC и PR кривые для нескольких моделей на одном графике.
+        Строит совмещенные ROC и PR кривые для нескольких моделей на одном графике,
+        автоматически выбирая правильный препроцессинг для каждого типа моделей.
         """
         fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 
         for name, model in models_dict.items():
+            if name in ['Tree', 'Random Forest', 'Extra Forest']:
+                current_X_test = X_cat
+            else:
+                current_X_test = X_full
+
             # Получаем вероятности для класса 1
             if hasattr(model, "predict_proba"):
-                y_pred_proba = model.predict_proba(X_test)[:, 1]
+                y_pred_proba = model.predict_proba(current_X_test)[:, 1]
             else:
-                y_pred_proba = model.decision_function(X_test)
+                y_pred_proba = model.decision_function(current_X_test)
                 
             # 1. ROC Curve
-            fpr, tpr, _ = roc_curve(y_test, y_pred_proba)
+            fpr, tpr, _ = roc_curve(y, y_pred_proba)
             roc_auc_val = auc(fpr, tpr)
             axes[0].plot(fpr, tpr, lw=2, label=f'{name} (AUC = {roc_auc_val:.4f})')
 
             # 2. Precision-Recall Curve
-            precision, recall, _ = precision_recall_curve(y_test, y_pred_proba)
+            precision, recall, _ = precision_recall_curve(y, y_pred_proba)
             pr_auc_val = auc(recall, precision)
             axes[1].plot(recall, precision, lw=2, label=f'{name} (PR AUC = {pr_auc_val:.4f})')
 
