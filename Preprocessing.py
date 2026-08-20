@@ -102,7 +102,8 @@ class UniversalPreprocessor(BaseEstimator, TransformerMixin):
                  numeric_config: Optional[Dict[str, list]] = None,
                  categorical_config: Optional[Dict[str, list]] = None,
                  default_num_strategy: Optional[list] = None,
-                 default_cat_strategy: Optional[list] = None):
+                 default_cat_strategy: Optional[list] = None,
+                 ignore_scaler: bool = False):
         
         self.numeric_features = numeric_features
         self.categorical_features = categorical_features
@@ -110,13 +111,15 @@ class UniversalPreprocessor(BaseEstimator, TransformerMixin):
         self.categorical_config = categorical_config if categorical_config is not None else {}
         self.default_num_strategy = default_num_strategy if default_num_strategy is not None else ['standard', 'median', 'clip_quantile']
         self.default_cat_strategy = default_cat_strategy if default_cat_strategy is not None else ['ohe', 'most_frequent']
+        self.ignore_scaler = ignore_scaler
 
         self.transformers_ = {}
 
     def fit(self, X: pd.DataFrame, y=None):
         for col in self.numeric_features:
             strategy = self.numeric_config.get(col, self.default_num_strategy)
-            scaler_type = strategy[0]
+
+            scaler_type = 'none' if self.ignore_scaler else strategy[0]
             imputer_strategy = strategy[1]
             outlier_method = strategy[2] if len(strategy) > 2 else 'none'
 
