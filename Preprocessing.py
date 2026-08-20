@@ -190,7 +190,7 @@ class UniversalPreprocessor(BaseEstimator, TransformerMixin):
         return pd.DataFrame(final_array, columns=all_columns, index=X.index)
     
     @classmethod
-    def from_yaml(cls, path: str):
+    def from_yaml(cls, path: str, ignore_scaler: bool = False):
         """Создает препроцессор напрямую из YAML-файла конфигурации."""
         import yaml
         with open(path, "r", encoding="utf-8") as f:
@@ -202,5 +202,6 @@ class UniversalPreprocessor(BaseEstimator, TransformerMixin):
             numeric_config=config.get("numeric_config"),
             categorical_config=config.get("categorical_config"),
             default_num_strategy=config.get("default_num_strategy"),
-            default_cat_strategy=config.get("default_cat_strategy")
+            default_cat_strategy=config.get("default_cat_strategy"),
+            ignore_scaler=ignore_scaler
         )
